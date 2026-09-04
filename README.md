@@ -2,8 +2,6 @@
 
 独立挂载的 Gitee Pull Request AI 评审服务，使用 DeepSeek API 生成评审与修改建议。
 
-`robot/` 不属于 Maven modules、前端工程或业务服务。删除整个 `robot/` 目录不会影响 `bh` 的编译、启动和运行；机器人只通过 Gitee Webhook 与 Gitee API 访问仓库。
-
 ## 能力边界
 
 - 监听 Pull Request 新建、更新、重新打开和转为 ready 事件。
