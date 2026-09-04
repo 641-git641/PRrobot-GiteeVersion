@@ -54,6 +54,19 @@ async def test_engine_repairs_one_invalid_json_response() -> None:
 
 
 @pytest.mark.asyncio
+async def test_engine_requires_simplified_chinese_natural_language_output() -> None:
+    provider = FakeCompletionProvider(
+        ['{"summary":"审查通过","verdict":"clean","rank":"P3","findings":[],"test_suggestions":[]}']
+    )
+
+    await ReviewEngine(provider).review(pull_request(), diff_context(), "rules")
+
+    system_prompt = provider.calls[0][0]["content"]
+    user_prompt = provider.calls[0][1]["content"]
+    assert "所有自然语言内容必须使用简体中文" in system_prompt
+    assert '"summary": "用简体中文写 2-5 句技术总结"' in user_prompt
+
+@pytest.mark.asyncio
 async def test_engine_drops_findings_that_do_not_anchor_to_diff() -> None:
     provider = FakeCompletionProvider(
         [
