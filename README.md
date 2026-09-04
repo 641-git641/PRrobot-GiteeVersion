@@ -12,6 +12,11 @@
 - 同一个仓库、PR、head SHA 只评审一次；失败任务按有限次数重试。
 - 只读审查：不执行 PR 代码，不 push，不修改文件，不批准，不拒绝，不合并。
 
+## 效果
+
+<img width="1363" height="1184" alt="image" src="https://github.com/user-attachments/assets/1627f0c0-a4b2-4ff2-902e-41ebb8dd06e2" />
+
+
 ## 本地运行
 
 Python 3.11+：
@@ -79,5 +84,6 @@ DeepSeek Key 与 Gitee Token 只存在服务端环境，不写入仓库，不发
 ```bash
 pytest -q
 ```
+
 
 测试使用内存 HTTP transport，不访问真实 Gitee 或 DeepSeek。生产验证应创建一个无敏感内容的测试 PR，确认新 PR 只产生一条带 `bh-ai-review:<headSha>` 标记的评论。
