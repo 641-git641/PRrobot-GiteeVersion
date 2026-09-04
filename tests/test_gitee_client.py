@@ -20,10 +20,17 @@ async def test_gitee_adapter_reads_pull_request_and_posts_form_comment() -> None
                     {
                         "filename": "src/example.ts",
                         "status": "modified",
-                        "patch": "@@ -1 +1,2 @@\n+const value = 1",
+                        "patch": {"diff": "@@ -1 +1,2 @@\n+const value = 1"},
+                        "additions": "1",
+                        "deletions": "0",
+                    },
+                    {
+                        "filename": "README.md",
+                        "status": "added",
+                        "patch": "@@ -0,0 +1 @@\n+readme",
                         "additions": 1,
                         "deletions": 0,
-                    }
+                    },
                 ],
             )
         if request.url.path.endswith("/comments"):
@@ -63,6 +70,10 @@ async def test_gitee_adapter_reads_pull_request_and_posts_form_comment() -> None
     assert pull_request.head_sha == "head-1"
     assert pull_request.base_sha == "base-1"
     assert files[0].filename == "src/example.ts"
+    assert files[0].patch == "@@ -1 +1,2 @@\n+const value = 1"
+    assert files[0].additions == 1
+    assert files[0].deletions == 0
+    assert files[1].patch == "@@ -0,0 +1 @@\n+readme"
     assert comments == []
     assert comment_id == 123
     assert all(request.url.params.get("access_token") == "gitee-token" for request in requests)

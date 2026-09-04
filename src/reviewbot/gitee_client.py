@@ -171,10 +171,15 @@ class GiteeClient:
         )
         if not filename:
             raise GiteeApiError("GET", "pull request files", 200, "file entry has no path")
+        patch_payload = payload.get("patch")
+        if isinstance(patch_payload, Mapping):
+            patch_text = GiteeClient._first_text(patch_payload.get("diff"), patch_payload.get("patch"))
+        else:
+            patch_text = GiteeClient._first_text(patch_payload)
         return ChangedFile(
             filename=filename,
             status=str(payload.get("status") or "modified"),
-            patch=GiteeClient._first_text(payload.get("patch"), payload.get("diff")),
+            patch=GiteeClient._first_text(patch_text, payload.get("diff")),
             additions=GiteeClient._integer(payload.get("additions")),
             deletions=GiteeClient._integer(payload.get("deletions")),
         )
@@ -195,4 +200,12 @@ class GiteeClient:
 
     @staticmethod
     def _integer(value: Any) -> int:
-        return value if isinstance(value, int) and value >= 0 else 0
+        if isinstance(value, int) and value >= 0:
+            return value
+        if isinstance(value, str):
+            try:
+                parsed = int(value.strip())
+            except ValueError:
+                return 0
+            return parsed if parsed >= 0 else 0
+        return 0
