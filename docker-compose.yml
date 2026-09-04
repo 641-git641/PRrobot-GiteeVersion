@@ -1,0 +1,16 @@
+services:
+  gitee-review-bot:
+    build: .
+    container_name: bh-gitee-review-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./data:/app/data
+      - ./review-rules.md:/app/review-rules.md:ro
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
