@@ -85,5 +85,9 @@ DeepSeek Key 与 Gitee Token 只存在服务端环境，不写入仓库，不发
 pytest -q
 ```
 
+## **建议**
+如果想进行如github版本或者其他需求的二开，建议搭配coding agent工具。
+
+
 
 测试使用内存 HTTP transport，不访问真实 Gitee 或 DeepSeek。生产验证应创建一个无敏感内容的测试 PR，确认新 PR 只产生一条带 `bh-ai-review:<headSha>` 标记的评论。
