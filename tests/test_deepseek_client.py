@@ -1,3 +1,4 @@
+import json
 import httpx
 import pytest
 
@@ -38,6 +39,8 @@ async def test_deepseek_client_sends_json_mode_without_exposing_key_in_request_p
     assert seen["query"] == b""
     assert seen["authorization"] == "Bearer runtime-only-key"
     assert '"response_format":{"type":"json_object"}' in str(seen["body"])
+    request_body = json.loads(str(seen["body"]))
+    assert request_body["thinking"] == {"type": "disabled"}
 
 
 @pytest.mark.asyncio

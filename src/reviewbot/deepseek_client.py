@@ -57,11 +57,14 @@ class DeepSeekClient:
             "max_tokens": max_tokens,
             "response_format": {"type": "json_object"},
         }
-        if self._thinking_enabled:
-            payload["thinking"] = {
+        payload["thinking"] = (
+            {
                 "type": "enabled",
                 "reasoning_effort": self._reasoning_effort,
             }
+            if self._thinking_enabled
+            else {"type": "disabled"}
+        )
 
         for attempt in range(self._max_retries + 1):
             try:
